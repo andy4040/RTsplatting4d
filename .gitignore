@@ -1,18 +1,9 @@
-third_party/
-data/
-runs/
-.venv/
-__pycache__/
-.pytest_cache/
 *.pyc
-pytest-cache-files-*/
-
-# Large training assets and machine-local configuration
-*.pt
-*.pth
-*.npy
-*.npz
-*.zip
-*.tar.gz
-.env
-*.local.json
+*.mp4
+.vscode
+__pycache__
+output
+build
+*.egg-info
+data
+screenshots

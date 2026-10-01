@@ -1,65 +1,80 @@
-# RTsplatting4d
+<div align="center">
 
-N3DV **coffee_martini의 0번 프레임**을 RT-Splatting으로 학습하는 정적 장면 실험입니다.
-학습 카메라 17개, 확인용 `cam00` 1개, 해상도 1352 × 1014를 사용합니다.
-목표는 **30,000 iterations**, 1,000회마다 렌더링을 저장합니다. 별도 모델과의 비교 실험은 수행하지 않습니다.
+# RT-Splatting: Joint Reflection-Transmission Modeling with Gaussian Splatting
 
-## 학습 결과
+[**Ji Shi**](https://github.com/sjj118) · [**Xianghua Ying**](https://scholar.google.com/citations?hl=zh-CN&user=27o9L1wAAAAJ) · [**Bowei Xing**](https://dblp.org/pid/320/5822.html)
+<br>
+[**Ruohao Guo**](https://ruohaoguo.github.io/) · [**Wenzhen Yue**](https://scholar.google.com/citations?hl=zh-CN&user=UPxl-gMAAAAJ)
+<br>
 
-**학습 진행 중입니다. 아래 이미지는 공개된 최신 중간 결과이며 최종 테스트가 아닙니다.**
+CVPR 2026 (Highlight)
+<br>
 
-[횟수별 이미지와 PSNR·SSIM·LPIPS 보기](results/coffee_martini/README.md)
+[![arXiv](https://img.shields.io/badge/arXiv-2605.18263-b31b1b)](https://arxiv.org/pdf/2605.18263)
+[![Project Page](https://img.shields.io/badge/Project-Page-green)](https://sjj118.github.io/RT-Splatting)
+[![Dataset](https://img.shields.io/badge/Drive-Dataset-4285F4)](https://drive.google.com/drive/folders/1mmKcm1Fb5djX3B_PDKfC7XyfQ38_p5nl)
+</div>
 
-![최신 RT-Splatting 렌더링과 창문 확대](results/coffee_martini/latest.png)
+![Teaser image](assets/teaser.png) 
+RT-Splatting is a hybrid surface-volume rendering framework that jointly models high-fidelity reflections and clear transmissions for semi-transparent scenes. It overcomes the blurry reflections and occluded backgrounds of existing methods, delivering state-of-the-art, real-time view synthesis. Beyond rendering, it perfectly decomposes the scene into independent reflection and transmission layers, unlocking powerful and intuitive material editing capabilities.
 
-원본과 렌더링을 슬라이더로 보려면 저장소를 내려받아
-`results/coffee_martini/index.html`을 브라우저로 여세요. GitHub 파일 화면에서는 HTML이 실행되지 않습니다.
-창문 마스크는 근사 주석이며, 현재 결과만으로 다른 방법 대비 품질 개선을 주장하지 않습니다.
+## Installation
 
-## 원본 사용 범위
+```shell
+conda create -n rtsplat python=3.10 -y
+conda activate rtsplat
+pip install -r requirements.txt
 
-[공식 RT-Splatting](https://github.com/sjj118/RT-Splatting)의 GaussianModel, 방향 인코딩,
-반사 MLP, 반사·투과 렌더러와 CUDA rasterizer를 직접 사용합니다.
-고정 커밋은 `3f45b3cac4be04db9f3092234666b695991b268a`이며 원본 checkout은 수정하지 않습니다.
+pip install --no-build-isolation submodules/simple-knn
+pip install --no-build-isolation submodules/diff-surfel-anych
 
-**학습 파이프라인 전체가 원 논문과 동일한 것은 아닙니다.** N3DV 데이터 준비, 초기 점 생성,
-근사 창문 마스크, 학습 루프를 추가했고 consistency loss의 합을 평균으로 바꿨습니다.
-원본 코드의 위치와 변경점은 [실행 기록](RUN_COFFEE.md)과 [상세 사용법](docs/USAGE.md)에 있습니다.
-현재 범위에는 4D 변형장이나 동적 장면 학습이 포함되지 않습니다.
-
-## 코드 위치
-
-| 경로 | 내용 |
-|---|---|
-| `rtstatic/engine.py` | 원본 모델·렌더러를 호출하는 학습, 재개, 평가 |
-| `rtstatic/losses.py` | 적용한 손실 계산 및 원본 대비 변경 |
-| `rtstatic/data.py` | 단일 시점 이미지와 카메라, 초기 점 준비 |
-| `deploy/train_vast.sh` | 현재 실행 설정: 30,000회 종료, 1,000회 결과 저장 |
-| `deploy/export_results.py` | Git에 올릴 이미지·지표 묶음 생성 |
-| `upstream.json` | 원본 저장소와 고정 커밋 |
-
-원본 소스는 `python bootstrap.py`로 `third_party/RT-Splatting`에 받습니다.
-GPU 환경 구성과 실제 재개 명령은 [RUN_COFFEE.md](RUN_COFFEE.md)를 참고하세요.
-처음부터 실행할 때는 기존 실행 폴더를 요구하는 `deploy/train_vast.sh` 대신 상세 사용법의 prepare/train 절차를 따르세요.
-
-## 결과 갱신
-
-실행 중인 작업 폴더에서 다음 명령으로 이 저장소에 최신 다운로드 결과를 내보냅니다.
-
-```bash
-python deploy/export_results.py --source /path/to/training-workspace --out /path/to/RTsplatting4d/results/coffee_martini
-git add results/coffee_martini
-git commit -m "Update coffee_martini training results"
-git push origin main
+pip install --no-build-isolation git+https://github.com/NVlabs/nvdiffrast
 ```
 
-커밋에는 코드와 시각화·지표·설정만 포함합니다. 원본 데이터셋, CUDA 빌드 파일,
-수백 MB의 학습 체크포인트는 제외합니다. 현재 모델 파일은 학습 서버의
-`/workspace/RTsplatting4d/runs/coffee_rt_100k/checkpoint.pt`에 있으며 최종 결과 수집 시 로컬에도 백업됩니다.
-서버 결과 수집 도구는 `VAST_HOST`와 `VAST_PORT` 환경변수를 사용합니다.
+## Datasets
 
-## 출처와 검증
+We evaluate our method primarily on [Ref-Real](https://storage.googleapis.com/gresearch/refraw360/ref_real.zip), [NeRF-Casting](https://dorverbin.github.io/nerf-casting/), [EnvGS](https://drive.google.com/file/d/1FMtj2YvdbaQe8vxwZlULcSBuTWb4pI7I), [Tanks&Temples](https://repo-sam.inria.fr/fungraph/3d-gaussian-splatting/datasets/input/tandt_db.zip) and our self-captured scenes. Transparent masks and our self-captured scenes are available on [Google Drive](https://drive.google.com/drive/folders/1mmKcm1Fb5djX3B_PDKfC7XyfQ38_p5nl).
 
-- 원본 RT-Splatting 저작권·라이선스: [MIT license](docs/RT-Splatting-LICENSE.txt). CUDA 하위 모듈은 각 원본 라이선스를 따릅니다.
-- 데이터: N3DV coffee_martini. 전체 데이터셋을 이 저장소에서 재배포하지 않습니다.
-- 검증 기록: [validation.json](validation.json). CPU 테스트 18개 통과, 실제 RTX 3090 학습·재로딩·중간 렌더링 검증.
+Put them under the `data` folder:
+
+```
+data/
+├── rt-splatting/
+│   ├── van/
+│   │   ├── images/
+│   │   ├── sparse/
+│   │   └── transparent_masks/
+│   └── swab/
+├── nerf-casting/
+├── ...
+```
+
+## Training & Evaluation
+
+```shell
+sh eval.sh
+```
+
+## Acknowledgements
+
+This work is built on a number of inspiring research works:
+
+- [2DGS: 2D Gaussian Splatting for Geometrically Accurate Radiance Fields](https://surfsplatting.github.io/)
+- [Ref-GS : Directional Factorization for 2D Gaussian Splatting](https://ref-gs.github.io/)
+- [EnvGS: Modeling View-Dependent Appearance with Environment Gaussian](https://zju3dv.github.io/envgs/)
+- [NeRF-Casting: Improved View-Dependent Appearance with Consistent Reflections](https://dorverbin.github.io/nerf-casting/)
+- [Ref-NeRF: Structured View-Dependent Appearance for Neural Radiance Fields](https://dorverbin.github.io/refnerf/)
+- [SAM 2: Segment Anything in Images and Videos](https://ai.meta.com/sam2)
+
+## Citation
+
+If you find our work useful in your research, please cite:
+
+```bibtex
+@inproceedings{RT-Splatting,
+  title={{RT-Splatting}: Joint Reflection-Transmission Modeling with Gaussian Splatting},
+  author={Shi, Ji and Ying, Xianghua and Xing, Bowei and Guo, Ruohao and Yue, Wenzhen},
+  booktitle={CVPR},
+  year={2026},
+}
+```
