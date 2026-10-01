@@ -1,0 +1,7 @@
+{
+  "steps": 17000,
+  "seconds": 4336.615895905008,
+  "gaussians": 319879,
+  "peak_vram_bytes": 10416351232,
+  "intermediate": true
+}

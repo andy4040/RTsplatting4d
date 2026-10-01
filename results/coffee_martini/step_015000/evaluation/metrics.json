@@ -1,0 +1,36 @@
+{
+  "mode": "rt",
+  "scene_fingerprint": "ae525c1bdd218aa97bebeac896cf99154a520e48a0e9f8b1d800ce555d1cc60a",
+  "frame": 0,
+  "per_view": {
+    "cam00": {
+      "full": {
+        "pixels": 1370928,
+        "mse": 0.00248689445425794,
+        "psnr": 26.04342646135794,
+        "mae": 0.027861972452206916,
+        "ssim": 0.8866328341405415,
+        "ssim_pixels": 1347368
+      },
+      "window": {
+        "pixels": 137596,
+        "mse": 0.010562084202655824,
+        "psnr": 19.76250374567367,
+        "mae": 0.06588414555093654,
+        "ssim": 0.6558904214588968,
+        "ssim_pixels": 120081
+      },
+      "opaque": {
+        "pixels": 1233332,
+        "mse": 0.0015859903922368784,
+        "psnr": 27.996994479207768,
+        "mae": 0.023620049815242336,
+        "ssim": 0.9191210523645201,
+        "ssim_pixels": 1191406
+      },
+      "lpips_full": 0.18363207578659058
+    }
+  },
+  "ground_truth": "observed image including reflections; no clean transmission GT",
+  "metric_notes": "PSNR uses selected pixels only (cap 120 dB); SSIM uses fully contained 11x11 windows. LPIPS, if requested, is full-image only."
+}
