@@ -5,32 +5,37 @@
     {
       "source": "utils/image_utils.py",
       "destination": "image_utils.py",
-      "sha256": "ca72a7089988e010d5d73a92717057804291b21562d0b7e007256967f97ab665",
-      "verbatim": true
+      "sha256": "2d7d0f9cc5655716f9f192ca0bcf119a862d6fc8e88899fff5136f54286f878c",
+      "verbatim": true,
+      "line_endings": "LF"
     },
     {
       "source": "utils/point_utils.py",
       "destination": "point_utils.py",
-      "sha256": "841b01a59e0e2b6614e5c5ed2604e28e692abf0c5026a65cfe7591ac267688bf",
-      "verbatim": true
+      "sha256": "d6bfd1c04b69829265ce9c4dddd61f052ea3dac1375eaafde0b8aa8634dab4ab",
+      "verbatim": true,
+      "line_endings": "LF"
     },
     {
       "source": "utils/sph_utils.py",
       "destination": "sph_utils.py",
-      "sha256": "c453bf383a4ce2b3db12c43bff11ea989599ba40149ae7c9c9897c5fd0bf7b6e",
-      "verbatim": true
+      "sha256": "3a53721a84078c3557f18b6b222bde54d27e6508aa933d240fb07348ef0d81ae",
+      "verbatim": true,
+      "line_endings": "LF"
     },
     {
       "source": "utils/color_utils.py",
       "destination": "color_utils.py",
-      "sha256": "2228fa22cf2e6a8cd820b402ac127bee49091913f5cabd9390def79f6db53b23",
-      "verbatim": true
+      "sha256": "a74f87bc61d40a850e625fabfe4908f1cc4b5abfaed904821024e21c6aac3ee7",
+      "verbatim": true,
+      "line_endings": "LF"
     },
     {
       "source": "utils/loss_utils.py",
       "destination": "loss_utils.py",
-      "sha256": "970a57e128e8304a2dc535e8cec8db7994e4a50e43df3e18d3f4328996a4810c",
-      "verbatim": true
+      "sha256": "0e3df7fc5e4ff8de53b5fbba37ae0fe446801d0228bee5a1ff3cecd3b4ce2e49",
+      "verbatim": true,
+      "line_endings": "LF"
     },
     {
       "source": "scene/gaussian_model.py:SphMipEncoding",

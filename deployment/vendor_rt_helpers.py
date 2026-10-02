@@ -14,15 +14,16 @@ destination.mkdir(parents=True, exist_ok=True)
 (destination / '__init__.py').write_text('"""Pinned, unmodified upstream helper implementations; see provenance.json."""\n')
 records = []
 for name in ('image_utils.py', 'point_utils.py', 'sph_utils.py', 'color_utils.py', 'loss_utils.py'):
-    data = (source / 'utils' / name).read_bytes()
+    # Git on Windows may check out CRLF; upstream blobs use LF.
+    data = (source / 'utils' / name).read_bytes().replace(b'\r\n', b'\n')
     (destination / name).write_bytes(data)
     records.append({'source': 'utils/' + name, 'destination': name,
-                    'sha256': hashlib.sha256(data).hexdigest(), 'verbatim': True})
+                    'sha256': hashlib.sha256(data).hexdigest(), 'verbatim': True, 'line_endings': 'LF'})
 path = source / 'scene/gaussian_model.py'
 code = path.read_text(encoding='utf-8')
 node = next(n for n in ast.parse(code).body if isinstance(n, ast.ClassDef) and n.name == 'SphMipEncoding')
 fragment = '\n'.join(code.splitlines()[node.lineno-1:node.end_lineno]) + '\n'
-(destination / 'encoding.py').write_text('import torch\nfrom torch import nn\nimport nvdiffrast.torch\n\n' + fragment, encoding='utf-8')
+(destination / 'encoding.py').write_text('import torch\nfrom torch import nn\nimport nvdiffrast.torch\n\n' + fragment, encoding='utf-8', newline='\n')
 records.append({'source': 'scene/gaussian_model.py:SphMipEncoding', 'destination': 'encoding.py',
                 'class_sha256': hashlib.sha256(fragment.encode()).hexdigest(), 'class_verbatim': True})
 for name in ('LICENSE', 'LICENSE.md'):
