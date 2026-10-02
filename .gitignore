@@ -7,3 +7,24 @@ build
 *.egg-info
 data
 screenshots
+
+# Local datasets, training artifacts and environment/session files.
+runs/
+checks/
+.venv/
+.env
+.env.*
+*.pth
+*.pt
+*.ckpt
+*.npy
+*.npz
+*.ply
+*.zip
+*.tar
+*.tar.gz
+*.log
+*.pid
+*.pem
+surface_pipeline_ready.json
+.pytest_cache/

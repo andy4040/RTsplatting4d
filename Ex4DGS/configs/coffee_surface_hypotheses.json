@@ -1,0 +1,43 @@
+{
+  "validation_cameras": ["cam00", "cam09"],
+  "test_cameras": ["cam19"],
+  "iterations_per_branch": 5000,
+  "preview_every": 1000,
+  "seed": 20261002,
+  "initialization": {
+    "max_groups": 3,
+    "min_component_patches": 3,
+    "max_points_per_group": 1600,
+    "min_surface_points": 3,
+    "depth_fractions": [0.3, 0.5, 0.7],
+    "min_train_views": 2,
+    "translation_bound_fraction": 0.3
+  },
+  "optimization": {
+    "surface_lr": 0.001,
+    "positive_mask_weight": 0.01,
+    "geometry_regularization_weight": 0.001,
+    "gradient_clip": 5.0,
+    "background_topology": "fixed in both branches",
+    "background_parameters": "all original trainable parameters in both branches"
+  },
+  "decision": {
+    "decision_observations": 3,
+    "required_passes": 2,
+    "min_gain_db": 0.5,
+    "min_per_view_gain_db": 0.0,
+    "min_ablation_gain_db": 0.1,
+    "min_validation_pixels": 128,
+    "min_validation_views": 2,
+    "max_outside_mse_increase": 0.02,
+    "fixed_roi_coverage_threshold": 0.05
+  },
+  "notes": [
+    "RT-inspired thin 3D Gaussian planar surfaces; not official RT-Splatting reproduction.",
+    "Pseudo-mask positives are hypotheses; outside pixels are not negative glass supervision.",
+    "Both branches reuse the same baseline and optimizer state, camera order, photometric objective and additional iteration count.",
+    "Equal iterations are not equal runtime: the surface branch has extra rendering and parameters.",
+    "Only validation decides adoption. Cam19 is evaluated after the decision; earlier baseline previews already included cam19.",
+    "Thresholds are predeclared engineering starting values, not paper-derived or calibrated glass-detection accuracy."
+  ]
+}

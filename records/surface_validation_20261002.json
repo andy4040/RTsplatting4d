@@ -1,0 +1,42 @@
+{
+  "cuda_checks_passed": true,
+  "smoke_passed": true,
+  "unit_tests_passed": 12,
+  "full_resolution": {
+    "status": "passed",
+    "baseline_snapshot_iteration": 20000,
+    "resolution": [
+      1352,
+      1014
+    ],
+    "background_points": 193744,
+    "surface_points": 1056,
+    "loss": 0.049239519983530045,
+    "seconds": 0.6174075603485107,
+    "peak_allocated_gb": 3.1646556854248047,
+    "baseline_checkpoint_modified": false
+  },
+  "acceptance_path": {
+    "status": "passed",
+    "synthetic_targets": true,
+    "quality_evidence": false,
+    "checks": [
+      "positive adoption path",
+      "merged model guard",
+      "all rejected fallback"
+    ]
+  },
+  "saved_render_reload_identical": true,
+  "smoke_is_quality_evidence": false,
+  "source_sha256": {
+    "run_residual_rt.py": "4135b74adbe0e7d6e7859f14155f2b551779a911968b6310d3b35d7df40d3297",
+    "run_surface_hypotheses.py": "4deb2486d89411efc6e7ad9adc9b66f4c95d7396ac1efa4c68c756c99034c99c",
+    "render_surface_hypotheses.py": "cf336b5c88f8b6f1671554bf14e6fc523f53db70fb4720c704fa5793dc660d66",
+    "rt_pipeline/surfaces.py": "8be1f9b8c262f61b3a7c4719ec537f4a0697580d7749123bcb4954e101713a41",
+    "rt_pipeline/surface_candidates.py": "00304091339ef5785ffae38e94ba90ff5454fbbea411c6760d561895f50159fe",
+    "rt_pipeline/surface_decisions.py": "3a60340866521564821d467ec91e71d212cb51dfe78a44d5e3034b08182cf6b7",
+    "rt_pipeline/report.py": "cda3eb201aa1904c2b0874011b900c7dae70c8e8544f9fb92d6d89889bc91bdb",
+    "configs/coffee_surface_hypotheses.json": "b0913a7a33f6ff3f0839aa400553f8425cf2ababc97cf1d464c05e5e7d80a99b"
+  },
+  "next": "Wait for baseline_final.pth iteration 30000, then run the independent surface trial."
+}

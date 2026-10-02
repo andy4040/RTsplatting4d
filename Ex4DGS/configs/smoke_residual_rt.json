@@ -1,0 +1,41 @@
+{
+  "post_baseline": "legacy_adapter_smoke_only",
+  "ex4dgs": {
+    "resolution": 8,
+    "start_duration": 1,
+    "duration": 1,
+    "start_timestamp": 0,
+    "end_timestamp": 0,
+    "time_interval": 10,
+    "time_pad": 2,
+    "time_pad_type": 0,
+    "interp_type": "cube",
+    "near": 0.01,
+    "far": 300.0,
+    "densify_from_iter": 500,
+    "densify_until_iter": 0,
+    "extract_from_iter": 100000000,
+    "static_reg": 0.0,
+    "motion_reg": 0.0
+  },
+  "pipeline": {
+    "purpose": "SMOKE ONLY: deliberately permissive candidate thresholds exercise RT branch; not a scientific run",
+    "baseline_iterations": 12,
+    "rt_iterations": 3,
+    "preview_every": 6,
+    "probe_frames": [0],
+    "observe_iterations": [3, 6, 9, 12],
+    "patch_size": 16,
+    "error_ratio": 0.0,
+    "mse_floor": 0.0,
+    "persistence": 0.8,
+    "max_improvement": 1.0,
+    "min_observations": 4,
+    "min_camera_views": 2,
+    "min_pixels_per_view": 2,
+    "min_hard_fraction": 0.15,
+    "max_candidate_fraction": 0.2,
+    "rt_lr": 0.002,
+    "optical_regularization": 0.001
+  }
+}

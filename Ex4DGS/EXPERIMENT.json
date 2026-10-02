@@ -1,0 +1,28 @@
+{
+  "upstream": "https://github.com/juno181/Ex4DGS",
+  "upstream_commit": "7fac64997164fde64732c80261e56adf66ca14df",
+  "local_source_note": "Vendored working source snapshot with CUDA dependency sources from the pinned upstream commit. Upstream promotional image assets and Git history are not duplicated.",
+  "method_correction_20261002": "RT-Splatting does not require known glass depth or separately inserted planes. It jointly optimizes geometry and factorized occupancy/opacity within one Gaussian collection. The current independent-plane extension is an additional project assumption, not a necessary step of RT-Splatting. Replacing it with the unified formulation has not been implemented.",
+  "mask_loss_difference": "The present pilot applies positive-only pseudo-mask coverage supervision. Official RT-Splatting instead regularizes the first-hit optical-opacity map against the inverted semantic mask. These objectives are not equivalent.",
+  "rt_inspiration": "https://arxiv.org/abs/2605.18263",
+  "not_a_paper_reproduction": true,
+  "protocol": "Ex4DGS baseline -> persistent training residual pseudo masks -> independent planar glass hypotheses -> matched extra-training control and surface branches -> validation adoption -> final test",
+  "data": "coffee_martini frame 0; original 15 training cameras unchanged; cam00/cam09 validation; cam19 final test; original train-only 5620-point COLMAP initialization. Earlier baseline previews already showed all three held-out cameras.",
+  "baseline": "Official Ex4DGS model/rasterizer/training losses, approved-data loader and passive observer added. Single-frame run disables dynamic extraction and motion regularizers, uses original world units with near=0.01; official N3DV paper settings are not claimed.",
+  "detection": "32px patches, MSE > max(2 * same-image global MSE, 0.0001), high in >=80% of 5 observations, <=10% improvement, final observation high; late observations at 26k/27k/28k/29k/30k",
+  "selection": "Positive-only pseudo masks from train residuals; outside is unknown. At most 3 connected-region plane hypotheses, depth fractions 0.3/0.5/0.7 of reconstructed-background depth, filtered by at least 2 training camera candidate masks. These fractions and plane priors are explicit assumptions, not recovered glass truth.",
+  "optics": "Independent thin 3D Gaussian planar sheets, learnable rigid position/orientation/extent, per-point geometric occupancy, per-sheet optical opacity/reflectance/roughness, shared degree-3 directional SH reflection environment. Combined background/surface depth ordering in occupancy and effective-opacity passes. Background geometry, opacity and color also refine, with fixed topology in both branches. No official 2D surfel rasterizer, Sph-Mip shading, refraction or specular gradient gating; RT-inspired extension, not identical RT-Splatting.",
+  "composition": "C = (1 - rendered_reflectance) * C_transmission + C_reflection",
+  "limitations": [
+    "High-error image regions can be non-glass; mask supervision is provisional and positive-only.",
+    "Plane initialization is ambiguous and sensitive to background depth and camera-facing orientation; bounded pose optimization cannot guarantee true glass recovery.",
+    "The surface trial explicitly supports only frame zero; temporal glass motion requires a separate implementation and validation.",
+    "Mask-free physical decomposition is not identifiable from photometric error alone.",
+    "Shared low-order SH cannot reproduce the full high-frequency or local reflection capacity of official RT-Splatting.",
+    "Same additional iterations and camera order do not imply equal runtime or parameter count."
+  ],
+  "evaluation": "Fixed geometry-projected candidate ROIs before refinement; cam00/cam09 only for validation. Two of the last three evaluations require >=0.5 dB mean gain, nonnegative gain in both views, >=0.1 dB removal-ablation gain, and <=2% outside-ROI MSE increase. Recheck the merged selected model after rejecting sheets; fall back to the control if it fails. Evaluate cam19 only after selecting/saving. Thresholds are predeclared engineering choices, not calibrated detection thresholds.",
+  "legacy": "rt_pipeline/optics.py and the old point-vote selection remain only for historical smoke checks. Production entrypoint now dispatches run_surface_hypotheses.py; live already-imported baseline is handed off after a verified final 30000-step checkpoint by deployment/continue_coffee_surfaces.py.",
+  "environment": "Python 3.10, Torch 2.1.2+cu118, torchvision 0.16.2, CUDA toolkit 11.8, gcc/g++11; actual lock saved as /workspace/ex4dgs-environment.txt",
+  "run": "python run_residual_rt.py --config configs/coffee_residual_rt_f000.json --source /workspace/RTsplatting4d/data/coffee_martini_f000 --output runs/coffee_f000_residual_rt"
+}
