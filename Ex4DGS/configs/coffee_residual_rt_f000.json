@@ -1,6 +1,6 @@
 {
-  "post_baseline": "surface_hypotheses",
-  "surface_config": "configs/coffee_surface_hypotheses.json",
+  "post_baseline": "rt_port",
+  "rt_port_config": "configs/coffee_rt_port.json",
   "ex4dgs": {
     "resolution": 2,
     "start_duration": 1,

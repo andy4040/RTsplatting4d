@@ -1,30 +1,60 @@
-## 이 저장소의 N3DV / Ex4DGS 실험
+## N3DV / Ex4DGS에 RT-Splatting 이식
 
-공식 RT-Splatting 소스는 루트에 보존하고, N3DV `coffee_martini` 실험은 [`Ex4DGS/`](Ex4DGS)에 별도로 추가했습니다. Ex4DGS 원본은 [juno181/Ex4DGS](https://github.com/juno181/Ex4DGS)의 `7fac64997164fde64732c80261e56adf66ca14df`이며, CUDA 의존성 소스와 원본 라이선스도 포함합니다.
+N3DV `coffee_martini`의 같은 시점 이미지로 학습한 Ex4DGS에 RT-Splatting의 반사·투과 표현을 이식합니다. **기존 가우시안 하나의 집합을 공유**하며, 별도 유리 평면이나 임의 깊이는 추가하지 않습니다. 공식 RT 코드의 기준 커밋은 `3f45b3cac4be04db9f3092234666b695991b268a`, Ex4DGS는 `7fac64997164fde64732c80261e56adf66ca14df`입니다.
 
-**현재 확장은 RT-Splatting 논문 재현이 아닙니다.** 현재 코드는 지속 고오차 영역을 임시 마스크로 만들고, 별도의 얇은 평면 가우시안 표면을 초기화하여 검증하는 실험입니다. RT-Splatting은 하나의 가우시안 집합에서 점유도와 광학적 불투명도를 분리하고 기하·광학 성질을 함께 최적화합니다. 유리의 정답 깊이를 사전에 입력하거나 별도 평면을 추가하는 것이 논문의 필수 조건은 아닙니다. 현재 평면 가정은 이 프로젝트에서 추가한 것이며, 논문의 통합 구조로 바꾸는 작업은 아직 구현하지 않았습니다. [논문 §4.1–4.4](https://arxiv.org/html/2605.18263v1)
+공식 RT의 점유도/광학적 불투명도 분리, 2D 표면 렌더러, SphMip 조명 인코딩, MLP, 반사·투과·산란 합성, 반사에 따른 투과 gradient 제어, 법선·점유도·consistency 손실을 사용합니다. **consistency는 공식 코드의 합산을 유지**합니다. 복사한 도우미의 출처와 해시는 [`provenance.json`](Ex4DGS/rt_port/vendor/provenance.json)에 있습니다.
 
-- 데이터 준비: [`tools/extract_n3dv_frame.py`](tools/extract_n3dv_frame.py), [`tools/prepare_n3dv_colmap.py`](tools/prepare_n3dv_colmap.py).
-- 기본 학습: [`Ex4DGS/run_residual_rt.py`](Ex4DGS/run_residual_rt.py). 현재 실험은 동영상 전체가 아닌 첫 프레임입니다.
-- 후속 실험: [`Ex4DGS/run_surface_hypotheses.py`](Ex4DGS/run_surface_hypotheses.py). 같은 기본 체크포인트에서 기본 모델과 표면 추가 모델을 각각 5,000회 추가 학습합니다.
-- 모델: [`Ex4DGS/rt_pipeline/surfaces.py`](Ex4DGS/rt_pipeline/surfaces.py). 후보 밖은 유리가 없다는 정답으로 감독하지 않습니다.
-- 설정·제약: [`Ex4DGS/EXPERIMENT.json`](Ex4DGS/EXPERIMENT.json), [`후속 실험 설정`](Ex4DGS/configs/coffee_surface_hypotheses.json).
-- 검증 기록: [`records/surface_validation_20261002.json`](records/surface_validation_20261002.json). CUDA 및 짧은 통합 테스트의 기록이며, 화질 개선의 증거는 아닙니다.
+Ex4DGS의 3D 가우시안과 학습된 상태를 유지하기 위해 투과는 Ex4DGS 3D 렌더러로, 표면은 같은 가우시안의 위치·회전·크기를 이용한 공식 RT 2D 렌더러로 계산합니다. 처음에 가장 짧은 축을 표면 법선 축으로 선택하고 위치·회전은 계속 학습합니다. 이는 공식 RT의 모든 패스를 2D로 렌더링하는 방식과 다르므로 **논문 그대로의 재현이라고 부르지 않습니다**. 두 분기는 추가 학습 중 가우시안 수를 고정합니다. 현재 실행기는 frame 0을 검증하며, 전체 동영상의 4D 성능은 아직 검증하지 않았습니다.
 
-학습용 15개 카메라를 유지하고, cam00·cam09는 후보 채택 검증에, cam19는 선택 후 최종 평가에 사용합니다. 이전 기본 학습 프리뷰에는 세 미학습 카메라가 모두 포함되어 있었습니다. PSNR 개선은 반사·투과 표현의 유용성을 평가하며, 실제 유리 존재를 확정하지 않습니다.
+학습은 다음 순서입니다.
 
-`deployment/`는 현재 서버의 `/workspace/RTsplatting4d`, `/workspace/Ex4DGS`, CUDA 11.8 및 별도 Python 환경 경로를 사용하는 실행 기록입니다. 새 환경에서는 경로를 맞춰야 하며, 복구·후속 실행 활성화 스크립트는 실행 중인 작업을 제어하므로 일반 설치 스크립트처럼 일괄 실행하지 마세요. Ex4DGS 작업 디렉터리는 저장소 안의 `Ex4DGS/`입니다. 기존 체크포인트를 재사용하는 실행 예시는 다음과 같습니다.
+1. 완료한 Ex4DGS 체크포인트에서 지속적인 고오차 학습 영역을 고정합니다. 현재는 26k–30k의 다섯 관측을 사용합니다.
+2. 동일 체크포인트와 원래 optimizer 상태에서 기본 Ex4DGS와 RT 이식 모델을 각각 5,000회 추가 학습합니다. 카메라 순서·랜덤 배경·학습 횟수는 같습니다. 실행 시간과 파라미터 수까지 같지는 않습니다.
+3. 후보에는 투명 영역이라는 임시 감독을 적용하고, 후보 밖은 미확인으로 둡니다. 후보의 BCE만 평균하며 원본의 후보 밖 불투명/투과율 감독은 제외합니다. 전체 영상의 RGB 손실은 유지합니다. RT는 장면 전체에 표현되며 후보가 픽셀별 켜기/끄기 스위치는 아닙니다.
+4. cam00·cam09의 학습 전 고오차 검증 영역을 고정하고 1,000회마다 두 모델을 평가합니다. 검증 영역은 학습에 사용하지 않습니다. 카메라마다 정의한 영역이 동일한 실제 유리라는 가정도 하지 않습니다.
+5. 마지막 3회 중 2회 이상 **및 마지막 평가**가 통과하면 RT 모델을 선택합니다. 기본 조건은 후보의 합산 MSE 기준 PSNR +0.5dB, 각 검증 카메라 후보 악화 없음, 전체 평균 PSNR 악화 없음, 후보 밖 MSE 증가 2% 이하입니다. 실패하면 추가 학습한 Ex4DGS를 선택합니다. 영역별 지표를 남기지만 최종 결과는 모델 전체를 선택하며 이미지 조각을 합치지 않습니다.
+6. 선택을 저장한 다음 cam19를 test합니다. 과거 기본 학습 프리뷰에 cam19가 노출되었으므로 완전히 미노출인 test는 아닙니다.
+
+후보는 유리 정답이 아닙니다. PSNR 개선 여부는 이 표현이 유용했는지 판단하는 기준이며 유리 존재를 확정하지 않습니다. 공식 consistency는 한 영상의 여러 후보를 함께 묶습니다. RT 단계의 iteration은 추가 학습 1회부터 세므로, 원본 기본값인 LPIPS 시작 15,000회는 이번 5,000회 실험에서 활성화되지 않습니다. 광학적 불투명도와 투과율 초기값은 원본의 0.5입니다. 원본과의 차이와 제약은 [`EXPERIMENT.json`](Ex4DGS/EXPERIMENT.json)에 기록합니다.
+
+주요 코드:
+
+| 역할 | 파일 |
+| --- | --- |
+| 두 분기 추가 학습·저장·재개 | [`run_rt_ex4dgs.py`](Ex4DGS/run_rt_ex4dgs.py) |
+| 재질·SphMip·MLP | [`rt_port/model.py`](Ex4DGS/rt_port/model.py) |
+| 반사·투과 렌더링 | [`rt_port/renderer.py`](Ex4DGS/rt_port/renderer.py) |
+| 공식 손실과 후보만 감독 | [`rt_port/losses.py`](Ex4DGS/rt_port/losses.py) |
+| 고정 평가 영역·모델 선택 | [`evaluation.py`](Ex4DGS/rt_port/evaluation.py), [`selection.py`](Ex4DGS/rt_port/selection.py) |
+| 선택된 모델 다시 렌더링 | [`render_rt_selected.py`](Ex4DGS/render_rt_selected.py) |
+| 실험 설정 | [`coffee_rt_port.json`](Ex4DGS/configs/coffee_rt_port.json) |
+
+기존 Ex4DGS 환경에서 공식 RT 확장을 같은 Torch 버전으로 빌드합니다. 저장소 루트의 공식 RT CUDA 소스를 사용합니다.
 
 ```bash
 cd Ex4DGS
-python run_surface_hypotheses.py \
+pip install 'matplotlib<3.10'
+pip install --no-build-isolation ../submodules/diff-surfel-anych
+pip install --no-build-isolation git+https://github.com/NVlabs/nvdiffrast.git@253ac4fcea7de5f396371124af597e6cc957bfae
+python run_rt_ex4dgs.py \
   --baseline-run /path/to/completed_baseline \
   --source /path/to/coffee_martini_f000 \
-  --config configs/coffee_surface_hypotheses.json \
-  --output /path/to/new_surface_trial
+  --config configs/coffee_rt_port.json \
+  --output /path/to/new_rt_port_trial
 ```
 
-원본 데이터, 추출 이미지, 학습 체크포인트 및 대용량 결과물은 Git에 포함하지 않습니다. 아래는 보존된 공식 RT-Splatting 설명입니다.
+중단 후 재개할 때는 같은 명령에 `--resume`을 추가합니다. `latest.pth`에 두 모델·optimizer·RT 조명/재질·난수 상태·샘플링 순서를 저장합니다. `selected.pth`는 원래 baseline 파일 없이도 렌더링할 수 있습니다.
+
+검증 기록: [67개 CPU 테스트와 실제 해상도 GPU 통합 검사](records/rt_port_validation_20261002.json), [두 모델의 저장·재로딩 검사](records/rt_port_reload_20261002.json), [중단·재개 검사](records/rt_port_resume_20261002.json). CUDA 비결정성으로 일부 파라미터의 엄격한 수치 일치는 통과하지 않았으며 해당 차이를 숨기지 않고 기록했습니다. RNG·샘플 순서·optimizer 횟수는 정확히 같고, 재개 후 영상 MSE는 미리 정한 오차 범위 안에서 일치했습니다. 이 검사는 최종 성능 개선의 증거가 아닙니다.
+
+```bash
+python render_rt_selected.py --checkpoint /path/to/trial/selected.pth \
+  --source /path/to/coffee_martini_f000 --output /path/to/new_preview
+python -m pytest tests/test_rt_port_losses.py tests/test_rt_port_selection.py tests/test_rt_port_evaluation.py -q
+python tools/smoke_rt_port.py
+```
+
+데이터, 이미지, 체크포인트와 대용량 출력은 Git에서 제외합니다. `deployment/`는 현재 서버의 `/workspace` 경로를 사용하는 실행 도구이므로 다른 서버에서는 경로를 맞춰야 합니다. 이전 별도 평면 실험인 `run_surface_hypotheses.py`와 관련 스크립트는 기록용으로 남아 있으며 현재 coffee 설정은 새 RT 이식 실행기를 사용합니다. 아래는 보존한 공식 RT-Splatting 설명입니다.
 
 ---
 

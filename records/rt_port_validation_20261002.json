@@ -1,0 +1,49 @@
+{
+  "date": "2026-10-02",
+  "purpose": "implementation validation, not evidence of quality improvement",
+  "cpu_tests": {
+    "command": "python -m pytest tests -q",
+    "passed": 67
+  },
+  "cuda_renderer_check": {
+    "status": "passed",
+    "production_light_architecture": true,
+    "transmission_alpha_one_matches_ex": true,
+    "shading_matches_official_equations": true,
+    "geometry_motion_material_gradients": true,
+    "checkpoint_roundtrip": true,
+    "losses": {
+      "pbr": 0.27193883061408997,
+      "occupancy": 0.0007685248856432736,
+      "norm": 0.037088166922330856,
+      "mask": 0.004943118430674076,
+      "consistency": 5.2289589802967384e-05,
+      "total": 0.3147909343242645
+    },
+    "peak_cuda_bytes": 369460736,
+    "image_size": [
+      64,
+      48
+    ]
+  },
+  "full_resolution_integration": {
+    "baseline_iterations": 30000,
+    "additional_steps_per_branch": 3,
+    "resolution": [
+      1352,
+      1014
+    ],
+    "both_branches_completed": true,
+    "selection_fell_back_to_ex4dgs": true,
+    "peak_allocated_cuda_bytes": 4315461632
+  },
+  "checkpoint_reload": "rt_port_reload_20261002.json",
+  "resume": "rt_port_resume_20261002.json",
+  "resume_precision": "Exact RNG/sampler/optimizer steps, metrics within fixed tolerance. Strict tensor match false; CUDA numerical variation retained in detailed report.",
+  "production_trial": {
+    "iterations_per_branch": 5000,
+    "status_at_recording": "running",
+    "evaluation_interval": 1000,
+    "not_completed_quality_result": true
+  }
+}

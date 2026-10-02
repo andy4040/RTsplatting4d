@@ -1,0 +1,501 @@
+{
+  "status": "passed",
+  "architecture_changed": false,
+  "steps": 3,
+  "stop_after": 1,
+  "baseline_run": "/workspace/Ex4DGS/checks/smoke_recovery_01",
+  "source": "/workspace/RTsplatting4d/data/coffee_martini_f000",
+  "commands": [
+    {
+      "command": [
+        "/workspace/venvs/ex4dgs/bin/python",
+        "/workspace/Ex4DGS/run_rt_ex4dgs.py",
+        "--baseline-run",
+        "/workspace/Ex4DGS/checks/smoke_recovery_01",
+        "--source",
+        "/workspace/RTsplatting4d/data/coffee_martini_f000",
+        "--output",
+        "/workspace/Ex4DGS/checks/rt_resume_02/rt_resume_02_uninterrupted",
+        "--config",
+        "/workspace/Ex4DGS/checks/rt_resume_02/config.json"
+      ],
+      "log": "/workspace/Ex4DGS/checks/rt_resume_02/uninterrupted.log",
+      "returncode": 0,
+      "elapsed_seconds": 9.522168343886733
+    },
+    {
+      "command": [
+        "/workspace/venvs/ex4dgs/bin/python",
+        "/workspace/Ex4DGS/run_rt_ex4dgs.py",
+        "--baseline-run",
+        "/workspace/Ex4DGS/checks/smoke_recovery_01",
+        "--source",
+        "/workspace/RTsplatting4d/data/coffee_martini_f000",
+        "--output",
+        "/workspace/Ex4DGS/checks/rt_resume_02/rt_resume_02_resumed",
+        "--config",
+        "/workspace/Ex4DGS/checks/rt_resume_02/config.json",
+        "--stop-after",
+        "1"
+      ],
+      "log": "/workspace/Ex4DGS/checks/rt_resume_02/stopped.log",
+      "returncode": 0,
+      "elapsed_seconds": 8.659605639055371
+    },
+    {
+      "command": [
+        "/workspace/venvs/ex4dgs/bin/python",
+        "/workspace/Ex4DGS/run_rt_ex4dgs.py",
+        "--baseline-run",
+        "/workspace/Ex4DGS/checks/smoke_recovery_01",
+        "--source",
+        "/workspace/RTsplatting4d/data/coffee_martini_f000",
+        "--output",
+        "/workspace/Ex4DGS/checks/rt_resume_02/rt_resume_02_resumed",
+        "--config",
+        "/workspace/Ex4DGS/checks/rt_resume_02/config.json",
+        "--resume"
+      ],
+      "log": "/workspace/Ex4DGS/checks/rt_resume_02/resumed.log",
+      "returncode": 0,
+      "elapsed_seconds": 6.939614864066243
+    },
+    {
+      "command": [
+        "/workspace/venvs/ex4dgs/bin/python",
+        "/workspace/Ex4DGS/run_rt_ex4dgs.py",
+        "--baseline-run",
+        "/workspace/Ex4DGS/checks/smoke_recovery_01",
+        "--source",
+        "/workspace/RTsplatting4d/data/coffee_martini_f000",
+        "--output",
+        "/workspace/Ex4DGS/checks/rt_resume_02/rt_resume_02_uninterrupted_repeat",
+        "--config",
+        "/workspace/Ex4DGS/checks/rt_resume_02/config.json"
+      ],
+      "log": "/workspace/Ex4DGS/checks/rt_resume_02/uninterrupted_repeat.log",
+      "returncode": 0,
+      "elapsed_seconds": 9.378591917455196
+    }
+  ],
+  "tolerances": {
+    "tensor_atol": 2e-05,
+    "tensor_rtol": 0.0002,
+    "mse_atol": 1e-06,
+    "mse_rtol": 0.0001
+  },
+  "trial_outputs": {
+    "uninterrupted": "/workspace/Ex4DGS/checks/rt_resume_02/rt_resume_02_uninterrupted",
+    "resumed": "/workspace/Ex4DGS/checks/rt_resume_02/rt_resume_02_resumed",
+    "uninterrupted_repeat": "/workspace/Ex4DGS/checks/rt_resume_02/rt_resume_02_uninterrupted_repeat"
+  },
+  "optimizer_steps": {
+    "control": {
+      "xyz": [
+        14.0
+      ],
+      "f_dc": [
+        14.0
+      ],
+      "f_rest": [
+        14.0
+      ],
+      "opacity": [
+        14.0
+      ],
+      "scaling": [
+        14.0
+      ],
+      "rotation": [
+        14.0
+      ],
+      "xyz_disp": [
+        14.0
+      ],
+      "motion_xyz": [
+        null
+      ],
+      "motion_f_dc": [
+        null
+      ],
+      "motion_f_rest": [
+        null
+      ],
+      "motion_scaling": [
+        null
+      ],
+      "motion_opacity": [
+        null
+      ],
+      "motion_opacity_center": [
+        null
+      ],
+      "motion_opacity_var": [
+        null
+      ],
+      "motion_rotation": [
+        null
+      ]
+    },
+    "treatment": {
+      "xyz": [
+        14.0
+      ],
+      "f_dc": [
+        14.0
+      ],
+      "f_rest": [
+        14.0
+      ],
+      "opacity": [
+        14.0
+      ],
+      "scaling": [
+        14.0
+      ],
+      "rotation": [
+        14.0
+      ],
+      "xyz_disp": [
+        14.0
+      ],
+      "motion_xyz": [
+        null
+      ],
+      "motion_f_dc": [
+        null
+      ],
+      "motion_f_rest": [
+        null
+      ],
+      "motion_scaling": [
+        null
+      ],
+      "motion_opacity": [
+        null
+      ],
+      "motion_opacity_center": [
+        null
+      ],
+      "motion_opacity_var": [
+        null
+      ],
+      "motion_rotation": [
+        null
+      ]
+    },
+    "material": {
+      "opacity": [
+        3.0
+      ],
+      "transmissivity": [
+        3.0
+      ],
+      "roughness": [
+        3.0
+      ],
+      "reflectance": [
+        3.0
+      ],
+      "feature": [
+        3.0
+      ],
+      "light_mlp": [
+        3.0,
+        3.0,
+        3.0,
+        3.0,
+        3.0,
+        3.0
+      ],
+      "dir_encoding": [
+        3.0
+      ]
+    }
+  },
+  "selected_model": "ex4dgs",
+  "exact_rng_match": true,
+  "exact_camera_background_match": true,
+  "validation_mse_match": true,
+  "decision_match": true,
+  "resume_mse_abs_differences": [
+    {
+      "iteration": 1,
+      "image": "cam00_f000000",
+      "full_control_mse": 0.0,
+      "full_rt_mse": 9.888145857672725e-12,
+      "outside_control_mse": 0.0,
+      "outside_rt_mse": 9.061987271685723e-12
+    },
+    {
+      "iteration": 1,
+      "image": "cam09_f000000",
+      "full_control_mse": 0.0,
+      "full_rt_mse": 8.524819739008649e-12,
+      "outside_control_mse": 0.0,
+      "outside_rt_mse": 6.916966999170882e-13
+    },
+    {
+      "iteration": 2,
+      "image": "cam00_f000000",
+      "full_control_mse": 0.0,
+      "full_rt_mse": 6.9328986995742525e-12,
+      "outside_control_mse": 0.0,
+      "outside_rt_mse": 2.8619058511925033e-11
+    },
+    {
+      "iteration": 2,
+      "image": "cam09_f000000",
+      "full_control_mse": 0.0,
+      "full_rt_mse": 2.1125656779474866e-11,
+      "outside_control_mse": 0.0,
+      "outside_rt_mse": 1.533224935901245e-11
+    },
+    {
+      "iteration": 3,
+      "image": "cam00_f000000",
+      "full_control_mse": 9.928030619832384e-13,
+      "full_rt_mse": 8.339084978103983e-11,
+      "outside_control_mse": 9.714659632287237e-13,
+      "outside_rt_mse": 9.397332217941923e-11
+    },
+    {
+      "iteration": 3,
+      "image": "cam09_f000000",
+      "full_control_mse": 6.078471059822732e-15,
+      "full_rt_mse": 1.051370102089777e-10,
+      "outside_control_mse": 7.0915495697931874e-15,
+      "outside_rt_mse": 9.598984107572761e-11
+    }
+  ],
+  "resume_material_difference": {
+    "_opacity": {
+      "elements": 5620,
+      "mismatched_elements": 0,
+      "max_abs_difference": 9.387731552124023e-07,
+      "rms_difference": 3.867665654411212e-08
+    },
+    "_transmissivity": {
+      "elements": 5620,
+      "mismatched_elements": 0,
+      "max_abs_difference": 2.9942020773887634e-07,
+      "rms_difference": 1.0894555479978862e-08
+    },
+    "_roughness": {
+      "elements": 5620,
+      "mismatched_elements": 0,
+      "max_abs_difference": 1.474982127547264e-06,
+      "rms_difference": 2.4388228325733508e-08
+    },
+    "_reflectance": {
+      "elements": 5620,
+      "mismatched_elements": 0,
+      "max_abs_difference": 5.862675607204437e-07,
+      "rms_difference": 8.539755569358931e-09
+    },
+    "_language_feature": {
+      "elements": 22480,
+      "mismatched_elements": 0,
+      "max_abs_difference": 6.984919309616089e-10,
+      "rms_difference": 1.7396405149749938e-10
+    },
+    "surfel_frame_permutation": {
+      "elements": 22480,
+      "mismatched_elements": 0,
+      "max_abs_difference": 0.0,
+      "rms_difference": 0.0
+    },
+    "dir_encoding.fm": {
+      "elements": 8388608,
+      "mismatched_elements": 9,
+      "max_abs_difference": 0.00012757215881720185,
+      "rms_difference": 5.888929521802311e-08
+    },
+    "light_mlp.0.weight": {
+      "elements": 20480,
+      "mismatched_elements": 0,
+      "max_abs_difference": 7.450580596923828e-09,
+      "rms_difference": 2.950251709599172e-10
+    },
+    "light_mlp.0.bias": {
+      "elements": 256,
+      "mismatched_elements": 0,
+      "max_abs_difference": 7.450580596923828e-09,
+      "rms_difference": 4.671581455006901e-10
+    },
+    "light_mlp.2.weight": {
+      "elements": 65536,
+      "mismatched_elements": 0,
+      "max_abs_difference": 1.043081283569336e-07,
+      "rms_difference": 4.799637909336241e-10
+    },
+    "light_mlp.2.bias": {
+      "elements": 256,
+      "mismatched_elements": 0,
+      "max_abs_difference": 9.313225746154785e-10,
+      "rms_difference": 7.054302975095794e-11
+    },
+    "light_mlp.4.weight": {
+      "elements": 1024,
+      "mismatched_elements": 0,
+      "max_abs_difference": 3.725290298461914e-09,
+      "rms_difference": 2.7729932239317634e-10
+    },
+    "light_mlp.4.bias": {
+      "elements": 4,
+      "mismatched_elements": 0,
+      "max_abs_difference": 0.0,
+      "rms_difference": 0.0
+    }
+  },
+  "same_seed_uninterrupted_repeat": {
+    "material_difference": {
+      "_opacity": {
+        "elements": 5620,
+        "mismatched_elements": 0,
+        "max_abs_difference": 1.475214958190918e-06,
+        "rms_difference": 5.6211391097349406e-08
+      },
+      "_transmissivity": {
+        "elements": 5620,
+        "mismatched_elements": 0,
+        "max_abs_difference": 4.4889748096466064e-07,
+        "rms_difference": 1.2468783339159017e-08
+      },
+      "_roughness": {
+        "elements": 5620,
+        "mismatched_elements": 0,
+        "max_abs_difference": 1.8116552382707596e-06,
+        "rms_difference": 3.353431665686912e-08
+      },
+      "_reflectance": {
+        "elements": 5620,
+        "mismatched_elements": 0,
+        "max_abs_difference": 8.791685104370117e-07,
+        "rms_difference": 1.3087426253832746e-08
+      },
+      "_language_feature": {
+        "elements": 22480,
+        "mismatched_elements": 0,
+        "max_abs_difference": 6.984919309616089e-10,
+        "rms_difference": 1.765815965670825e-10
+      },
+      "surfel_frame_permutation": {
+        "elements": 22480,
+        "mismatched_elements": 0,
+        "max_abs_difference": 0.0,
+        "rms_difference": 0.0
+      },
+      "dir_encoding.fm": {
+        "elements": 8388608,
+        "mismatched_elements": 16,
+        "max_abs_difference": 0.0003945778589695692,
+        "rms_difference": 1.5652406659683038e-07
+      },
+      "light_mlp.0.weight": {
+        "elements": 20480,
+        "mismatched_elements": 0,
+        "max_abs_difference": 4.0978193283081055e-08,
+        "rms_difference": 5.101496447501574e-10
+      },
+      "light_mlp.0.bias": {
+        "elements": 256,
+        "mismatched_elements": 0,
+        "max_abs_difference": 3.725290298461914e-09,
+        "rms_difference": 2.3571886109685636e-10
+      },
+      "light_mlp.2.weight": {
+        "elements": 65536,
+        "mismatched_elements": 0,
+        "max_abs_difference": 2.3655593395233154e-07,
+        "rms_difference": 9.650455989884676e-10
+      },
+      "light_mlp.2.bias": {
+        "elements": 256,
+        "mismatched_elements": 0,
+        "max_abs_difference": 3.725290298461914e-09,
+        "rms_difference": 3.4065159026930303e-10
+      },
+      "light_mlp.4.weight": {
+        "elements": 1024,
+        "mismatched_elements": 0,
+        "max_abs_difference": 3.725290298461914e-09,
+        "rms_difference": 1.8659941647403144e-10
+      },
+      "light_mlp.4.bias": {
+        "elements": 4,
+        "mismatched_elements": 0,
+        "max_abs_difference": 0.0,
+        "rms_difference": 0.0
+      }
+    },
+    "mse_abs_differences": [
+      {
+        "iteration": 1,
+        "image": "cam00_f000000",
+        "full_control_mse": 0.0,
+        "full_rt_mse": 9.603129402790955e-11,
+        "outside_control_mse": 0.0,
+        "outside_rt_mse": 1.223459597521348e-10
+      },
+      {
+        "iteration": 1,
+        "image": "cam09_f000000",
+        "full_control_mse": 0.0,
+        "full_rt_mse": 5.078881759601472e-12,
+        "outside_control_mse": 0.0,
+        "outside_rt_mse": 2.5267982151078172e-12
+      },
+      {
+        "iteration": 2,
+        "image": "cam00_f000000",
+        "full_control_mse": 1.189465193007777e-13,
+        "full_rt_mse": 4.16477963227635e-12,
+        "outside_control_mse": 8.257283745649602e-16,
+        "outside_rt_mse": 1.926983572708707e-11
+      },
+      {
+        "iteration": 2,
+        "image": "cam09_f000000",
+        "full_control_mse": 1.7985612998927536e-14,
+        "full_rt_mse": 6.512129724356441e-11,
+        "outside_control_mse": 2.0913826226376386e-14,
+        "outside_rt_mse": 5.7141166798224674e-11
+      },
+      {
+        "iteration": 3,
+        "image": "cam00_f000000",
+        "full_control_mse": 5.632438959679575e-13,
+        "full_rt_mse": 1.0312950493585049e-10,
+        "outside_control_mse": 6.256523077396992e-13,
+        "outside_rt_mse": 1.2833493295838494e-10
+      },
+      {
+        "iteration": 3,
+        "image": "cam09_f000000",
+        "full_control_mse": 2.27678986775004e-13,
+        "full_rt_mse": 6.947620256880782e-11,
+        "outside_control_mse": 2.650657471292561e-13,
+        "outside_rt_mse": 5.859944474106982e-11
+      }
+    ],
+    "exceeds_tensor_tolerance": true,
+    "exact_rng_and_training_trace": true
+  },
+  "control": {
+    "tensor_count": 54,
+    "max_abs_difference": 2.384185791015625e-07,
+    "largest_difference_path": "control[6]"
+  },
+  "treatment": {
+    "tensor_count": 54,
+    "max_abs_difference": 2.384185791015625e-07,
+    "largest_difference_path": "treatment[4]"
+  },
+  "strict_tensor_failures": {
+    "material": "material.dir_encoding.fm: Tensor-likes are not close!\n\nMismatched elements: 9 / 8388608 (0.0%)\nGreatest absolute difference: 0.00012757215881720185 at index (0, 0, 319, 941, 7) (up to 2e-05 allowed)\nGreatest relative difference: 0.32777494192123413 at index (0, 0, 216, 842, 13) (up to 0.0002 allowed)",
+    "material_optimizer": "material_optimizer.state.4.exp_avg: Tensor-likes are not close!\n\nMismatched elements: 5 / 22480 (0.0%)\nGreatest absolute difference: 0.0002205967903137207 at index (5430, 2) (up to 2e-05 allowed)\nGreatest relative difference: 0.0006649792776443064 at index (5430, 3) (up to 0.0002 allowed)"
+  },
+  "parameter_match": false,
+  "resume_assertion_scope": "Exact RNG, sampler/background trace and optimizer step counts; raw validation MSE within predeclared tolerances and unchanged final selection. This does not assert bit-identical CUDA training or exact final parameter equality. Any stricter parameter mismatch remains in strict_tensor_failures and material difference statistics."
+}

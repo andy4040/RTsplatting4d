@@ -1,0 +1,32 @@
+<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ex4DGS 영역별 PSNR</title>
+<style>body{font:16px system-ui;background:#101820;color:#edf2f5;margin:24px}button,select,input{font:inherit;padding:7px;margin:4px}a{color:#9bd4ff}.row{display:flex;gap:16px}.panel{flex:1;min-width:0}canvas{width:100%;cursor:crosshair;background:#222}#detail,#summary{padding:14px;background:#243340;margin:12px 0;line-height:1.7}table{border-collapse:collapse;width:100%;margin:12px 0}td,th{border:1px solid #475562;padding:7px;text-align:left}.warn{color:#ffd584}#regions{max-height:350px;overflow:auto}small{color:#bdccd5}@media(max-width:850px){.row{display:block}}</style>
+<h1>Ex4DGS 30,000회 · 영역별 품질 분석</h1>
+<p>반사·투과 확장을 붙이기 전의 기본 모델입니다. <b>빨강: 카메라 전체 PSNR보다 3dB 이상 낮음</b> · 주황: 전체 평균보다 낮음 · 파랑: 전체 평균 이상. 이 색은 유리 판정이 아닙니다.</p>
+<div id="summary"></div>
+<label>카메라 <select id="camera"></select></label><label>격자 <select id="grid"><option>4x3</option><option selected>8x6</option><option>16x12</option></select></label>
+<label><input type="checkbox" id="shade" checked>오차 색상</label><button id="clear">선택 해제</button><button id="lowest">하위 20% 영역 선택</button>
+<p>사진의 칸을 클릭하면 여러 칸을 묶어 비교할 수 있습니다. 창문·책상 등 원하는 영역을 선택하고 아래 이름으로 기록하세요. 카메라를 바꾸면 같은 칸 번호라도 다른 공간일 수 있습니다.</p>
+<div class="row"><div class="panel"><h2>실제 사진</h2><canvas id="gt"></canvas></div><div class="panel"><h2>기본 모델 렌더링</h2><canvas id="render"></canvas></div></div>
+<div id="detail"></div><input id="label" placeholder="예: 중앙 창문 / 책상 / 벽"><button id="save">선택 영역 기록</button><button id="export">기록 내려받기</button>
+<div id="saved"></div><div id="regions"></div>
+<p class="warn">PSNR이 낮다는 사실만으로 유리라고 판단할 수 없습니다. 질감, 가림, 기하 오류도 원인일 수 있습니다. 이 페이지에는 학습 15대와 검증 2대가 포함되며 cam19는 최종 평가용으로 남겨둡니다.</p>
+<p><a href="metrics.json">전체 수치 JSON</a> · <a href="regions.csv">영역별 CSV</a></p>
+<script>
+const data=__REPORT_DATA__;let selected=new Set(),imgs={},records=[],serial=0;
+const el=id=>document.getElementById(id),fmt=x=>x.toFixed(2),view=()=>data.views[+el('camera').value],cells=()=>view().grids[el('grid').value];
+el('summary').textContent=Object.entries(data.summary).map(([k,s])=>`${k==='train'?'학습':'검증'} ${s.cameras}대: 카메라 PSNR 평균 ${fmt(s.mean_camera_psnr)} dB / 픽셀 오차 통합 PSNR ${fmt(s.pooled_pixel_psnr)} dB`).join(' · ');
+data.views.forEach((v,i)=>{let o=document.createElement('option');o.value=i;o.textContent=`${v.name} · ${v.split==='train'?'학습':'검증'} · ${fmt(v.psnr)} dB`;el('camera').append(o)});
+function stats(items){let pixels=items.reduce((s,c)=>s+c.w*c.h,0),mse=items.reduce((s,c)=>s+c.mse*c.w*c.h,0)/pixels;return {pixels,mse,psnr:-10*Math.log10(Math.max(mse,1e-12)),mean_cell_psnr:items.reduce((s,c)=>s+c.psnr,0)/items.length}}
+function draw(){let v=view(),cs=cells();for(let key of ['gt','render']){let canvas=el(key),ctx=canvas.getContext('2d');canvas.width=v.width;canvas.height=v.height;if(imgs[key])ctx.drawImage(imgs[key],0,0,v.width,v.height);for(let [i,c] of cs.entries()){let low=c.psnr<v.psnr-3,below=c.psnr<v.psnr;if(el('shade').checked){ctx.fillStyle=low?'rgba(255,45,45,.30)':below?'rgba(255,165,0,.22)':'rgba(50,130,255,.12)';ctx.fillRect(c.x,c.y,c.w,c.h)}ctx.strokeStyle=selected.has(i)?'#00ffbc':'rgba(255,255,255,.6)';ctx.lineWidth=selected.has(i)?5:1;ctx.strokeRect(c.x,c.y,c.w,c.h);ctx.font=`bold ${el('grid').value==='16x12'?14:22}px sans-serif`;ctx.fillStyle='rgba(0,0,0,.75)';ctx.fillRect(c.x+2,c.y+2,el('grid').value==='16x12'?53:80,el('grid').value==='16x12'?20:30);ctx.fillStyle='white';ctx.fillText(fmt(c.psnr),c.x+5,c.y+(el('grid').value==='16x12'?17:25))}}
+let region=[...selected].map(i=>cs[i]),all=stats(cs),s=region.length?stats(region):null;
+el('detail').textContent=`카메라 전체 PSNR ${fmt(v.psnr)} dB · 칸별 PSNR의 산술평균 ${fmt(all.mean_cell_psnr)} dB. `+(s?`선택 ${region.length}칸: 통합 영역 PSNR ${fmt(s.psnr)} dB / 선택 칸 PSNR 평균 ${fmt(s.mean_cell_psnr)} dB / 전체 대비 ${fmt(s.psnr-v.psnr)} dB. `:'칸을 클릭해 분석할 영역을 선택하세요. ')+`두 평균은 로그 변환 순서가 달라 서로 다릅니다. 영역 비교에는 통합 영역 PSNR을 사용하세요.`;
+el('regions').innerHTML='<table><tr><th>낮은 순위</th><th>행·열</th><th>영역 PSNR</th><th>전체 대비</th></tr>'+cs.map((c,i)=>({...c,id:i})).sort((a,b)=>a.psnr-b.psnr).map((c,i)=>`<tr data-id="${c.id}"><td>${i+1}</td><td>${c.row}행 ${c.col}열</td><td>${fmt(c.psnr)} dB</td><td>${fmt(c.psnr-v.psnr)} dB</td></tr>`).join('')+'</table>';
+el('regions').querySelectorAll('tr[data-id]').forEach(row=>row.onclick=()=>toggle(+row.dataset.id));}
+function toggle(i){selected.has(i)?selected.delete(i):selected.add(i);draw()}
+async function load(){let token=++serial;selected.clear();let entries=await Promise.all(['gt','render'].map(key=>new Promise(resolve=>{let im=new Image();im.onload=()=>resolve([key,im]);im.src=`${view().name}_${key}.jpg`;})));if(token!==serial)return;imgs=Object.fromEntries(entries);draw()}
+for(let key of ['gt','render'])el(key).onclick=e=>{let box=e.target.getBoundingClientRect(),x=(e.clientX-box.left)*view().width/box.width,y=(e.clientY-box.top)*view().height/box.height;let i=cells().findIndex(c=>x>=c.x&&x<c.x+c.w&&y>=c.y&&y<c.y+c.h);if(i>=0)toggle(i)};
+el('camera').onchange=load;el('grid').onchange=()=>{selected.clear();draw()};el('shade').onchange=draw;el('clear').onclick=()=>{selected.clear();draw()};
+el('lowest').onclick=()=>{selected=new Set(cells().map((c,i)=>({i,p:c.psnr})).sort((a,b)=>a.p-b.p).slice(0,Math.ceil(cells().length*.2)).map(c=>c.i));draw()};
+el('save').onclick=()=>{if(!selected.size)return;let cs=[...selected].map(i=>cells()[i]);records.push({label:el('label').value||'이름 없는 영역',camera:view().name,split:view().split,grid:el('grid').value,cells:cs,...stats(cs)});let p=document.createElement('p');let r=records.at(-1);p.textContent=`${r.label} · ${r.camera} · 통합 PSNR ${fmt(r.psnr)} dB (${cs.length}칸)`;el('saved').append(p)};
+el('export').onclick=()=>{let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(records,null,2)],{type:'application/json'}));a.download='selected_regions.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};load();
+</script></html>

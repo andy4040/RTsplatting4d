@@ -1,0 +1,42 @@
+{
+  "repository": "https://github.com/sjj118/RT-Splatting",
+  "commit": "3f45b3cac4be04db9f3092234666b695991b268a",
+  "files": [
+    {
+      "source": "utils/image_utils.py",
+      "destination": "image_utils.py",
+      "sha256": "ca72a7089988e010d5d73a92717057804291b21562d0b7e007256967f97ab665",
+      "verbatim": true
+    },
+    {
+      "source": "utils/point_utils.py",
+      "destination": "point_utils.py",
+      "sha256": "841b01a59e0e2b6614e5c5ed2604e28e692abf0c5026a65cfe7591ac267688bf",
+      "verbatim": true
+    },
+    {
+      "source": "utils/sph_utils.py",
+      "destination": "sph_utils.py",
+      "sha256": "c453bf383a4ce2b3db12c43bff11ea989599ba40149ae7c9c9897c5fd0bf7b6e",
+      "verbatim": true
+    },
+    {
+      "source": "utils/color_utils.py",
+      "destination": "color_utils.py",
+      "sha256": "2228fa22cf2e6a8cd820b402ac127bee49091913f5cabd9390def79f6db53b23",
+      "verbatim": true
+    },
+    {
+      "source": "utils/loss_utils.py",
+      "destination": "loss_utils.py",
+      "sha256": "970a57e128e8304a2dc535e8cec8db7994e4a50e43df3e18d3f4328996a4810c",
+      "verbatim": true
+    },
+    {
+      "source": "scene/gaussian_model.py:SphMipEncoding",
+      "destination": "encoding.py",
+      "class_sha256": "dc18ad4f6471039e42cf624a44d672f6dd3d9877e28b67cdd24318b4b261e2c5",
+      "class_verbatim": true
+    }
+  ]
+}

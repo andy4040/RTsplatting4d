@@ -49,7 +49,16 @@ def main():
     scene=training(lp.extract(args),op.extract(args),pp.extract(args),[],args.save_iterations,[],None,-1,args,observer=monitor)
     # Authoritative checkpoint is after all end-of-iteration callbacks/mutations.
     torch.save((scene.gaussians.capture(),args.iterations),output/'baseline_final.pth')
-    if config.get('post_baseline', 'surface_hypotheses') == 'surface_hypotheses':
+    if config.get('post_baseline', 'rt_port') == 'rt_port':
+        import gc
+        from run_rt_ex4dgs import run as run_rt_trial
+        del scene
+        gc.collect(); torch.cuda.empty_cache()
+        run_rt_trial(SimpleNamespace(baseline_run=output, source=cli.source,
+            config=Path(config.get('rt_port_config', 'configs/coffee_rt_port.json')),
+            output=output/'rt_port_trial', resume=False))
+        return
+    if config.get('post_baseline') == 'surface_hypotheses':
         import gc
         from run_surface_hypotheses import main as run_surface_trial
         del scene

@@ -1,0 +1,40 @@
+{
+  "seed": 20261002,
+  "iterations_per_branch": 5000,
+  "evaluate_every": 1000,
+  "validation_cameras": ["cam00", "cam09"],
+  "test_cameras": ["cam19"],
+  "material": {
+    "initial_opacity": 0.5,
+    "initial_transmissivity": 0.5,
+    "xyz_axis": [0, 1, 2],
+    "shading_chunk_size": 65536,
+    "checkpoint_shading": true
+  },
+  "rt_loss": {
+    "init_until_iter": 0,
+    "norm_loss_from_iter": 0,
+    "mask_loss_from_iter": 0,
+    "lambda_dssim": 0.2,
+    "lambda_lpips": 0.01,
+    "lpips_loss_from_iter": 15000,
+    "norm_loss_weight": 0.05,
+    "dist_loss_weight": 0.0,
+    "occupancy_decay_weight": 0.001,
+    "mask_loss_weight": 0.01,
+    "consistency_loss_weight": 0.000002,
+    "local_var_scale": 4.0
+  },
+  "validation_roi": {"patch_size": 32, "error_ratio": 2.0, "mse_floor": 0.0001},
+  "decision": {
+    "decision_observations": 3,
+    "required_passes": 2,
+    "min_validation_pixels": 128,
+    "min_validation_views": 2,
+    "min_gain_db": 0.5,
+    "min_per_view_gain_db": 0.0,
+    "min_global_gain_db": 0.0,
+    "max_outside_mse_increase": 0.02,
+    "require_roi_hash": true
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "status": "passed",
+  "purpose": "standalone checkpoint reload parity only",
+  "fixtures_are_validation_selections": false,
+  "trial": "/workspace/Ex4DGS/checks/rt_fullres_01",
+  "source": "/workspace/RTsplatting4d/data/coffee_martini_f000",
+  "mse_absolute_tolerance": 1e-08,
+  "mse_relative_tolerance": 1e-05,
+  "original_file_sha256": {
+    "latest.pth": "7ff10d28c38ffc330573498a9aa016584c707e0807e789aed21f0b8af915c6e9",
+    "selected.pth": "d9fa3a73d91be9e33f053289aa1505b019d36954f8f81be0042c44262ccb0865",
+    "decision.json": "34608d411ae6b2140af40597c4d76ccf5e811932c60b8c8bac6507e52f7a26f8",
+    "test_metrics.json": "b3a448dfa7ca0ecf314bf5bd965f04cc7f2d9e7da2e2752c20fbcc5d17b7bd04"
+  },
+  "branches": {
+    "ex4dgs": {
+      "status": "passed",
+      "test_fixture": true,
+      "views": [
+        {
+          "image": "cam19_f000000",
+          "expected_mse": 0.004326584489331813,
+          "reloaded_mse": 0.004326584283262491,
+          "absolute_difference": 2.060693221964116e-10,
+          "passed": true
+        }
+      ],
+      "render_report": "/workspace/Ex4DGS/checks/rt_fullres_reload_01/ex4dgs_render/index.html"
+    },
+    "rt_ex4dgs": {
+      "status": "passed",
+      "test_fixture": true,
+      "views": [
+        {
+          "image": "cam19_f000000",
+          "expected_mse": 0.015721596918267015,
+          "reloaded_mse": 0.015721598640084267,
+          "absolute_difference": 1.721817251276736e-09,
+          "passed": true
+        }
+      ],
+      "render_report": "/workspace/Ex4DGS/checks/rt_fullres_reload_01/rt_ex4dgs_render/index.html"
+    }
+  },
+  "original_files_unchanged": true
+}
